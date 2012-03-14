@@ -8,31 +8,31 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  *
  * @author Niels
  */
 public class GatherRiverList {
-    private static ArrayList<String> riverlist = new ArrayList<>();
-    private static String line ;
-    public static ArrayList<String> getRiverList(){
 
-    try{
-      FileReader fread = new FileReader("rivers.txt"); 
-      BufferedReader in = new BufferedReader(fread);	
-            
-      for(int a = 0;(line = in.readLine())!=null; a++){
-            riverlist.add(line); 
+    private static ArrayList<String> riverlist = new ArrayList<>();
+    private static String line;
+
+    public ArrayList<String> getRiverList() {
+
+        try {
+            FileReader fread = new FileReader("rivers.txt");
+            BufferedReader in = new BufferedReader(fread);
+
+            for (int a = 0; (line = in.readLine()) != null; a++) {
+                riverlist.add(line);
             }
-        riverlist = GatherGeoNames.removeMultipleEntries(riverlist);
-        //System.out.println(riverlist.size());
+            riverlist = new ArrayList<>(new HashSet<>(riverlist));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
-    catch(IOException e){
-	System.out.println("IO-Fehler!");
+        return riverlist;
     }
-    
-    return riverlist;
-}
 }

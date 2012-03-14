@@ -18,7 +18,7 @@ public class FileRead {
     static String line;
     static ArrayList<String> array = new ArrayList<>();
 
-    public static ArrayList<String> readfile(String filename) {
+    public ArrayList<String> readfile(String filename) {
 
         try {
             FileReader fread = new FileReader(filename); //öffntet die gewünschte txt Datei

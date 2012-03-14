@@ -7,6 +7,8 @@ package datagather;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.geonames.*;
 
 /**
@@ -15,7 +17,6 @@ import org.geonames.*;
  */
 public class GatherGeoNames {
 
-    static ArrayList<String> geonameslist = new ArrayList<>();
     static ArrayList<String> filelist = new ArrayList<>();
     static ArrayList<String> riverlist = new ArrayList<>();
     int startRow;
@@ -25,115 +26,123 @@ public class GatherGeoNames {
     String classes;
     int maxrow;
 
-    public static <T> ArrayList<T> removeMultipleEntries(Collection<T> list) {
+    public <T> ArrayList<T> removeMultipleEntries(Collection<T> list) {
         return new ArrayList<>(new HashSet<>(list));
     }
     /*
      * Style set SHORT FeatureClass set P
      */
 
-    public static void setSearchCriteria(ToponymSearchCriteria searchCriteria, String q, int startRow, String countryCode, String ContinentCode, int maxrow) throws InvalidParameterException {
-        searchCriteria.setQ(q);
-        searchCriteria.setStartRow(startRow);
-        searchCriteria.setCountryCode(countryCode);
-        searchCriteria.setContinentCode(ContinentCode);
-        searchCriteria.setMaxRows(maxrow);
+    public ToponymSearchCriteria geSearchCriteriaByParameters(SearchCriteriaParameter param) {
+        ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
+        searchCriteria.setQ(param.getArea());
+        searchCriteria.setStartRow(param.getStartRow());
+
+        try {
+            searchCriteria.setCountryCode(param.getContryCode());
+        } catch (InvalidParameterException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        searchCriteria.setContinentCode(param.getContineltalCode());
+        searchCriteria.setMaxRows(param.getMaxRows());
         searchCriteria.setStyle(Style.SHORT);
         searchCriteria.setFeatureClass(FeatureClass.P);
+        return searchCriteria;
     }
 
-    public static ArrayList<String> getResultGeoNames() {
-        ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
+    public ArrayList<String> getResultGeoNames() {
+
         WebService.setUserName("nielswinkler");
 
+        ArrayList<SearchCriteriaParameter> parameterList = new ArrayList<SearchCriteriaParameter>();
+        parameterList.add(new SearchCriteriaParameter("Yorkshire", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Lincolnshire", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Nottinghamshire", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Leeds", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Bradford", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Calderdale", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Kirklees", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Wakefield", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Barnsley", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Sheffield", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Rotherham", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Doncaster", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Nottingham", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("York", 0, "GB", "EU", 800));
 
-        setSearchCriteria(searchCriteria, "Yorkshire", 0, "GB", "EU", 800);
 
-        ToponymSearchResult searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "Lincolnshire", 0, "GB", "EU", 800);
+        ArrayList<String> geonameslist = new ArrayList<>();
 
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "Nottinghamshire", 0, "GB", "EU", 800);
+        for (SearchCriteriaParameter param : parameterList) {
+            ToponymSearchCriteria criteria = geSearchCriteriaByParameters(param);
+            ToponymSearchResult searchResult = null;
 
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "Leeds", 0, "GB", "EU", 800);
+            try {
+                searchResult = WebService.search(criteria);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
 
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "Bradford", 0, "GB", "EU", 800);
-
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "Calderdale", 0, "GB", "EU", 800);
-
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "Kirklees", 0, "GB", "EU", 800);
-
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "Wakefield", 0, "GB", "EU", 800);
-
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "Barnsley", 0, "GB", "EU", 800);
-
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "Sheffield", 0, "GB", "EU", 800);
-
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "Doncaster", 0, "GB", "EU", 800);
-
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "Rotherham", 0, "GB", "EU", 800);
-
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "York", 0, "GB", "EU", 800);
-
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
-        }
-        setSearchCriteria(searchCriteria, "Nottingham", 0, "GB", "EU", 800);
-
-        searchResult = WebService.search(searchCriteria);
-        for (Toponym toponym : searchResult.getToponyms()) {
-            geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
+            for (Toponym toponym : searchResult.getToponyms()) {
+                geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
+            }
         }
 
         geonameslist = removeMultipleEntries(geonameslist);
 
         return geonameslist;
+    }
+
+    private class SearchCriteriaParameter {
+
+        private String area = "";
+        private int startRow = 0;
+        private String contryCode = "";
+        private String contineltalCode = "";
+        private int maxRows = 0;
+
+        SearchCriteriaParameter(String area, int startRow, String contry, String continental, int maxRows) {
+            this.area = area;
+            this.startRow = startRow;
+            this.contryCode = contry;
+            this.contineltalCode = continental;
+            this.maxRows = maxRows;
+        }
+
+        /**
+         * @return the area
+         */
+        String getArea() {
+            return area;
+        }
+
+        /**
+         * @return the startRow
+         */
+        int getStartRow() {
+            return startRow;
+        }
+
+        /**
+         * @return the contryCode
+         */
+        String getContryCode() {
+            return contryCode;
+        }
+
+        /**
+         * @return the contineltalCode
+         */
+        String getContineltalCode() {
+            return contineltalCode;
+        }
+
+        /**
+         * @return the maxRows
+         */
+        int getMaxRows() {
+            return maxRows;
+        }
     }
 }

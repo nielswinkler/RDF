@@ -34,32 +34,35 @@ public class DataGatherMain {
 
         Model modelChapter = ModelFactory.createDefaultModel();
         Model modelBook = ModelFactory.createDefaultModel();
-
-        dataListDBPedia_Towns = GatherDBPedia.getresulttowns(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
+        GatherDBPedia GatherDBPediaObj = new GatherDBPedia();
+        dataListDBPedia_Towns = GatherDBPediaObj.getresulttowns(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
                 GatherQuerys.QUERY_ENDPOINT_DBPEDIA, GatherQuerys.QUERY_TOWN_DBPEDIA);
-        dataListDBPedia_Towns = GatherGeoNames.removeMultipleEntries(dataListDBPedia_Towns);
+        
+        GatherGeoNames GatherGeoNamesObj = new GatherGeoNames();
+        
+        dataListDBPedia_Towns = GatherGeoNamesObj.removeMultipleEntries(dataListDBPedia_Towns);
 
         //System.out.println(dataListDBPedia_Towns.toString());
 
 
-        dataListDBPedia_People = GatherDBPedia.getresultpeople(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
+        dataListDBPedia_People = GatherDBPediaObj.getresultpeople(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
                 GatherQuerys.QUERY_ENDPOINT_DBPEDIA, GatherQuerys.QUERY_PEOPLE_DBPEDIA);
-        dataListDBPedia_People = GatherGeoNames.removeMultipleEntries(dataListDBPedia_People);
+        dataListDBPedia_People = GatherGeoNamesObj.removeMultipleEntries(dataListDBPedia_People);
 
         //System.out.println(dataListDBPedia_People.toString());
 
-        dataListDBPedia_Kings = GatherDBPedia.getresultkings(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
+        dataListDBPedia_Kings = GatherDBPediaObj.getresultkings(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
                 GatherQuerys.QUERY_ENDPOINT_DBPEDIA, GatherQuerys.QUERY_KINGS_DBPEDIA);
-        dataListDBPedia_Kings = GatherGeoNames.removeMultipleEntries(dataListDBPedia_Kings);
+        dataListDBPedia_Kings = GatherGeoNamesObj.removeMultipleEntries(dataListDBPedia_Kings);
 
         //System.out.println(dataListDBPedia_Kings.toString());
-
-        dataListGeoNames = GatherGeoNames.getResultGeoNames();
-        dataListGeoNames = GatherGeoNames.removeMultipleEntries(dataListGeoNames);
+        dataListGeoNames = GatherGeoNamesObj.getResultGeoNames();
+        dataListGeoNames = GatherGeoNamesObj.removeMultipleEntries(dataListGeoNames);
         //System.out.println(dataListGeoNames.toString());
 
-        dataListRivers = GatherRiverList.getRiverList();
-        dataListRivers = GatherGeoNames.removeMultipleEntries(dataListRivers);
+        GatherRiverList GatherRiverListObj = new GatherRiverList();
+        dataListRivers = GatherRiverListObj.getRiverList();
+        dataListRivers = GatherGeoNamesObj.removeMultipleEntries(dataListRivers);
 
         try {
 
