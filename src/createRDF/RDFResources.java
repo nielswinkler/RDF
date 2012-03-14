@@ -8,7 +8,7 @@ package createRDF;
  *
  * @author Niels
  */
-public class RDFResources {
+public abstract class RDFResources {
  
     public static final String ROGER_RESS_DBPEDIA = "dbpedia.org/resource/Roger_de_Pont_L'Évêque";
     public static final String CASATI_RESS_DBPEDIA = "sdajflksadölkfjöslkdjfö";

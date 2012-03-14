@@ -30,36 +30,36 @@ public class DataGatherMain {
     private static Resource Book;
 
     //ArrayList<String> dataListBDPedia = new ArrayList<>();
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         Model modelChapter = ModelFactory.createDefaultModel();
         Model modelBook = ModelFactory.createDefaultModel();
 
         dataListDBPedia_Towns = GatherDBPedia.getresulttowns(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
                 GatherQuerys.QUERY_ENDPOINT_DBPEDIA, GatherQuerys.QUERY_TOWN_DBPEDIA);
-        dataListDBPedia_Towns = GatherGeoNames.ohneDoppelte(dataListDBPedia_Towns);
+        dataListDBPedia_Towns = GatherGeoNames.removeMultipleEntries(dataListDBPedia_Towns);
 
         //System.out.println(dataListDBPedia_Towns.toString());
 
 
         dataListDBPedia_People = GatherDBPedia.getresultpeople(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
                 GatherQuerys.QUERY_ENDPOINT_DBPEDIA, GatherQuerys.QUERY_PEOPLE_DBPEDIA);
-        dataListDBPedia_People = GatherGeoNames.ohneDoppelte(dataListDBPedia_People);
+        dataListDBPedia_People = GatherGeoNames.removeMultipleEntries(dataListDBPedia_People);
 
         //System.out.println(dataListDBPedia_People.toString());
 
         dataListDBPedia_Kings = GatherDBPedia.getresultkings(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
                 GatherQuerys.QUERY_ENDPOINT_DBPEDIA, GatherQuerys.QUERY_KINGS_DBPEDIA);
-        dataListDBPedia_Kings = GatherGeoNames.ohneDoppelte(dataListDBPedia_Kings);
+        dataListDBPedia_Kings = GatherGeoNames.removeMultipleEntries(dataListDBPedia_Kings);
 
         //System.out.println(dataListDBPedia_Kings.toString());
 
-        dataListGeoNames = GatherGeoNames.getresultgeonames();
-        dataListGeoNames = GatherGeoNames.ohneDoppelte(dataListGeoNames);
+        dataListGeoNames = GatherGeoNames.getResultGeoNames();
+        dataListGeoNames = GatherGeoNames.removeMultipleEntries(dataListGeoNames);
         //System.out.println(dataListGeoNames.toString());
 
         dataListRivers = GatherRiverList.getRiverList();
-        dataListRivers = GatherGeoNames.ohneDoppelte(dataListRivers);
+        dataListRivers = GatherGeoNames.removeMultipleEntries(dataListRivers);
 
         try {
 

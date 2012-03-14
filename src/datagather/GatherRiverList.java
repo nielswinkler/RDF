@@ -25,7 +25,7 @@ public class GatherRiverList {
       for(int a = 0;(line = in.readLine())!=null; a++){
             riverlist.add(line); 
             }
-        riverlist = GatherGeoNames.ohneDoppelte(riverlist);
+        riverlist = GatherGeoNames.removeMultipleEntries(riverlist);
         //System.out.println(riverlist.size());
         }
 
