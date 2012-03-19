@@ -25,8 +25,6 @@ public class GatherDBPedia {
         ResultSet results = queryEx.execSelect();
         String resultsXML = ResultSetFormatter.asXMLString(results);
 
-        //System.out.println(resultsXML);
-
         DocumentBuilder db;
 
         ArrayList<String> resultListtown = new ArrayList<>();
@@ -43,41 +41,28 @@ public class GatherDBPedia {
             for (int i = 0; i < resultsNodes.getLength(); i++) {
                 resultNodesChilds = resultsNodes.item(i).getChildNodes();
 
-                String link = resultNodesChilds.item(1).getTextContent().toString();
-                String property = resultNodesChilds.item(3).getTextContent().toString();
-                //String name = resultNodesChilds.item(5).getTextContent().toString();
-                link = link.split(",")[0];
-                link.replace("\n", " ");
-                property = property.replace("\n", " ");
-                property = property.replace(" ", "");
-                //System.out.println(link);
-                if (!link.equals("")) {
-                    //System.out.println(link);
-                    resultListtown.add(property + "&" + link);
+                String townlabel = resultNodesChilds.item(1).getTextContent().toString();
+                String townresource = resultNodesChilds.item(3).getTextContent().toString();
+                townlabel = townlabel.split(",")[0];
+                townlabel.replace("\n", " ");
+                townresource = townresource.replace("\n", " ").replace(" ", "");
+                if (!townlabel.equals("")) {
+                    resultListtown.add(townresource + "&" + townlabel);
                 }
             }
-            //System.out.print(resultList.toString());
-            //test = resultListlink.toString().replace(",","");
-            //System.out.println(test);
-
         } catch (ParserConfigurationException | SAXException | IOException e) {
             throw new RuntimeException(e);
         }
-
-
         return resultListtown;
     }
 
     public ArrayList<String> getresultpeople(String ontology_service, String endpoint, String queryString) {
-
 
         QueryExecution queryEx = QueryExecutionFactory.sparqlService(
                 ontology_service, String.format(queryString, endpoint));
 
         ResultSet results = queryEx.execSelect();
         String resultsXML = ResultSetFormatter.asXMLString(results);
-
-        //System.out.println(resultsXML);
 
         DocumentBuilder db;
         ArrayList<String> resultListpeople = new ArrayList<>();
@@ -94,23 +79,14 @@ public class GatherDBPedia {
             for (int i = 0; i < resultsNodes.getLength(); i++) {
                 resultNodesChilds = resultsNodes.item(i).getChildNodes();
 
-                String resspeople = resultNodesChilds.item(5).getTextContent().toString();
+                String resspeople = resultNodesChilds.item(3).getTextContent().toString();
                 String namepeople = resultNodesChilds.item(1).getTextContent().toString();
-                //String name = resultNodesChilds.item(5).getTextContent().toString();
-                //link = link.split(",")[0];
-                //link = link.split("(")[0];
                 resspeople.replace("\n", "");
                 namepeople.replace("\n", "");
-                //System.out.println(link);
                 if (!resspeople.equals("")) {
-                    //System.out.println(link);
                     resultListpeople.add((resspeople + "&" + namepeople).replace("\n", ""));
                 }
             }
-            //System.out.print(resultList.toString());
-            //test = resultListlink.toString().replace(",","");
-            //System.out.println(test);
-
         } catch (ParserConfigurationException | SAXException | IOException e) {
         }
 
@@ -118,7 +94,6 @@ public class GatherDBPedia {
     }
 
     public ArrayList<String> getresultkings(String ontology_service, String endpoint, String queryString) {
-
 
         QueryExecution queryEx = QueryExecutionFactory.sparqlService(
                 ontology_service, String.format(queryString, endpoint));
@@ -140,7 +115,6 @@ public class GatherDBPedia {
 
             for (int i = 0; i < resultsNodes.getLength(); i++) {
                 resultNodesChilds = resultsNodes.item(i).getChildNodes();
-
                 String nameskings = resultNodesChilds.item(3).getTextContent().toString();
                 String resskings = resultNodesChilds.item(1).getTextContent().toString();
                 nameskings.replace("\n", "");
@@ -152,8 +126,6 @@ public class GatherDBPedia {
         } catch (ParserConfigurationException | SAXException | IOException e) {
             throw new RuntimeException(e);
         }
-
-
         return resultListkings;
     }
 }

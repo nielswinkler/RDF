@@ -19,14 +19,15 @@ public class FileRead {
     static ArrayList<String> array = new ArrayList<>();
 
     public ArrayList<String> readfile(String filename) {
-
         try {
-            FileReader fread = new FileReader(filename); //öffntet die gewünschte txt Datei
-            BufferedReader in = new BufferedReader(fread); // txt wird in den BufferReader geladen
-
-            for (int i = 0; (line = in.readLine()) != null; i++) { // durchlaufen, bis line = null(datei zu ende ist)
-                array.add(line); // array[i] wird mit line(der aktuellen Zeile) belegt	
-
+            // opens Text File
+            FileReader fread = new FileReader(filename); 
+            // loads the Text File into the Buffered Reader
+            BufferedReader in = new BufferedReader(fread);
+            //reads every line in and saves it into the String line
+            //if the line = null -> end of file
+            for (int i = 0; (line = in.readLine()) != null; i++) { 
+                array.add(line);	
             }
         } catch (IOException e) {
             System.out.println("IO-Fehler!");

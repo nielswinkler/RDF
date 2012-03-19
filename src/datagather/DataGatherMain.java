@@ -7,9 +7,7 @@ package datagather;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -30,16 +28,17 @@ public class DataGatherMain {
     private static Resource Book;
 
     //ArrayList<String> dataListBDPedia = new ArrayList<>();
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, IOException {
 
         Model modelChapter = ModelFactory.createDefaultModel();
         Model modelBook = ModelFactory.createDefaultModel();
+        
         GatherDBPedia GatherDBPediaObj = new GatherDBPedia();
         dataListDBPedia_Towns = GatherDBPediaObj.getresulttowns(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
                 GatherQuerys.QUERY_ENDPOINT_DBPEDIA, GatherQuerys.QUERY_TOWN_DBPEDIA);
-        
+
         GatherGeoNames GatherGeoNamesObj = new GatherGeoNames();
-        
+
         dataListDBPedia_Towns = GatherGeoNamesObj.removeMultipleEntries(dataListDBPedia_Towns);
 
         //System.out.println(dataListDBPedia_Towns.toString());
@@ -76,72 +75,56 @@ public class DataGatherMain {
 
                 String br = readedchapter.toString();
                 br = br.replaceAll(",", "");
-                //System.out.println(br);
 
-//      String chapterfilepath    = "http://somewhere/York_Daten_Chapter"+b+".txt";
                 String chapterfilepath = "https://raw.github.com/nielswinkler/RDF/master/York_Daten_Chapter" + b + ".txt";
-//      String bookfilepath    = "http://somewhere/York_Daten.txt";
                 String bookfilepath = "https://raw.github.com/nielswinkler/RDF/master/York_Daten.txt";
 
                 Book = modelBook.createResource(bookfilepath);
                 Chapter = modelChapter.createResource(chapterfilepath);
 
-                Book = createRDF.CreateRDF.createbookrdf(Book, chapterfilepath);
-                Chapter = createRDF.CreateRDF.createcontent(Chapter, br, "York_Daten_Chapter" + b, bookfilepath);
+                Book = rdfcreator.CreateRDF.createBookRDF(Book, chapterfilepath);
+                Chapter = rdfcreator.CreateRDF.createContent(Chapter, br, "York_Daten_Chapter" + b, bookfilepath);
 
                 if (br.matches("(.*)Roger(.*)") & (br.matches("(.*)archbishop of York(.*)") || br.matches("(.*)archbishop(.*)"))) {
-
-                    Chapter = createRDF.CreateRDF.createarchbishop(Chapter);
-
-                    //System.out.println("hi");
-
-                    counter++;
+                    Chapter = rdfcreator.CreateRDF.createBishopRoger(Chapter);
                 }
                 if (br.matches("(.*)casati(.*)")) {
-                    Chapter = createRDF.CreateRDF.createcasati(Chapter);
-                    counter++;
+                    Chapter = rdfcreator.CreateRDF.createCasati(Chapter);
+                }
+                if (br.matches("(.*)York(.*)")) {
+                    Chapter = rdfcreator.CreateRDF.createYork(Chapter);
+                }
+                if (br.matches("(.*)Nottingham(.*)")) {
+                    Chapter = rdfcreator.CreateRDF.createNottingham(Chapter);
                 }
                 for (int i = 0; i < dataListDBPedia_Towns.size(); i++) {
                     String towndbpedia = dataListDBPedia_Towns.get(i).toString();
                     String rdftowndbpedia = dataListDBPedia_Towns.get(i).toString();
                     towndbpedia = towndbpedia.split("&")[0].replace(" ", "").replace("\n", "");
                     if (br.matches("(.*)" + towndbpedia + "(.*)")) {
-                        Chapter = createRDF.CreateRDF.createtowndbpedia(Chapter, rdftowndbpedia.split("&")[1].replace(" ", "").replace("\n", ""));
-                        //System.out.println(rdftown.split("&")[1].replace("\n","") + " exists in ");
-                        counter++;
+                        Chapter = rdfcreator.CreateRDF.createTownDBPedia(Chapter, rdftowndbpedia.split("&")[1].replace(" ", "").replace("\n", ""));
                     }
                 }
                 for (int i = 0; i < dataListDBPedia_Kings.size(); i++) {
                     String kingnames = dataListDBPedia_Kings.get(i).toString();
                     String rdfkingnames = dataListDBPedia_Kings.get(i).toString();
                     kingnames = kingnames.split("of")[0].split(",")[0].replace("\n", "");
-                    //System.out.println(town);
                     if (br.replace(" ", "").matches("(.*)" + kingnames.replace(" ", "") + "(.*)") & !(kingnames.replace(" ", "").equals("John") | kingnames.replace(" ", "").equals("Stephen"))) {
-                        Chapter = createRDF.CreateRDF.createkingsdbpedia(Chapter, rdfkingnames.split("&")[1].replace(" ", ""));
-                        //System.out.println(kingnames + " exists in ");
-                        counter++;
+                        Chapter = rdfcreator.CreateRDF.createKingsDBPedia(Chapter, rdfkingnames.split("&")[1].replace(" ", ""));
                     }
                 }
                 for (int i = 0; i < dataListGeoNames.size(); i++) {
                     String towngeonames = dataListGeoNames.get(i).toString();
                     String rdftowngeonames = dataListGeoNames.get(i).toString();
                     towngeonames = towngeonames.split("&")[0].replace(" ", "").replace("\n", "");
-                    //System.out.println(town);
                     if (br.matches("(.*)" + towngeonames + "(.*)")) {
-                        Chapter = createRDF.CreateRDF.creategeonames(Chapter, rdftowngeonames.split("&")[0].replace(" ", ""), rdftowngeonames.split("&")[1].replace(" ", ""),
+                        Chapter = rdfcreator.CreateRDF.createGeonames(Chapter, rdftowngeonames.split("&")[0].replace(" ", ""), rdftowngeonames.split("&")[1].replace(" ", ""),
                                 rdftowngeonames.split("&")[2].replace(" ", ""), rdftowngeonames.split("&")[3].replace(" ", ""));
-                        //System.out.println("<http://dbpedia.org/page/"+town+">");
-                        //System.out.println(town + " exists in ");
-                        //counter++;
                     }
                 }
-                //System.out.println(dataListRivers.size());
                 for (int c = 0; c < dataListRivers.size(); c++) {
                     String river = dataListRivers.get(c);
                     if (br.matches("(.*)" + river + "(.*)") & ((br.matches("(.*)river(.*)")) | (br.matches("(.*)sea(.*)")))) {
-                        //System.out.println("<http://dbpedia.org/page/River_"+river+">");
-                        //System.out.println(river + " exists in ");
-                        //counter++;
                     }
                 }
                 for (int i = 0; i < dataListDBPedia_People.size(); i++) {
@@ -149,11 +132,9 @@ public class DataGatherMain {
                     String rdfpeopledbpedia = dataListDBPedia_People.get(i).toString();
                     people = people.split("&")[0].split(",")[0].replace("Æ", "A").replace("(", "!");
                     people = people.split("!")[0].replace("\n", "");
-                    //System.out.println(people);
-                    if (br.replace(" ", "").matches("(.*)" + people.replace(" ", "") + "(.*)") & !(people.replace(" ", "").equals("John") | people.replace(" ", "").equals("Richard") | people.replace(" ", "").equals("Margaret"))) {
-                        Chapter = createRDF.CreateRDF.createpeopledbpedia(Chapter, rdfpeopledbpedia.split("&")[1].replace(" ", ""));
-                        //System.out.println(rdfpeople.split("&")[0].replace("\n","") + " exists in ");
-                        //counter++;
+                    if (br.replace(" ", "").matches("(.*)" + people.replace(" ", "") + "(.*)") & !(people.replace(" ", "").equals("John") 
+                            | people.replace(" ", "").equals("Richard") | people.replace(" ", "").equals("Margaret"))) {
+                        Chapter = rdfcreator.CreateRDF.createPeopleDBPedia(Chapter, rdfpeopledbpedia.split("&")[1].replace(" ", ""));
                     }
                 }
                 readedchapter.clear();
@@ -161,8 +142,14 @@ public class DataGatherMain {
         } catch (IOException e) {
             System.out.println("IO-Fehler!");
         }
+        BufferedWriter out = new BufferedWriter(
+                new OutputStreamWriter(
+                new FileOutputStream("Yorl_Daten_Trippel.txt")));
+        
         modelBook.write(System.out, "N-TRIPLE");
         modelChapter.write(System.out, "N-TRIPLE");
-        System.out.println(counter);
+        modelBook.write(out,"N-TRIPLE");
+        modelChapter.write(out,"N-TRIPLE");
+        out.close();
     }
 }

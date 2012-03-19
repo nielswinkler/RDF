@@ -53,7 +53,7 @@ public class GatherGeoNames {
 
     public ArrayList<String> getResultGeoNames() {
 
-        WebService.setUserName("nielswinkler");
+        WebService.setUserName("bachelorwinkler");
 
         ArrayList<SearchCriteriaParameter> parameterList = new ArrayList<SearchCriteriaParameter>();
         parameterList.add(new SearchCriteriaParameter("Yorkshire", 0, "GB", "EU", 800));
@@ -70,6 +70,7 @@ public class GatherGeoNames {
         parameterList.add(new SearchCriteriaParameter("Doncaster", 0, "GB", "EU", 800));
         parameterList.add(new SearchCriteriaParameter("Nottingham", 0, "GB", "EU", 800));
         parameterList.add(new SearchCriteriaParameter("York", 0, "GB", "EU", 800));
+        parameterList.add(new SearchCriteriaParameter("Hull", 0, "GB", "EU", 800));
 
 
         ArrayList<String> geonameslist = new ArrayList<>();
