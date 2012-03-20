@@ -16,6 +16,7 @@ public abstract class RDFResources {
     public static final String PROPERTY_NAMESPACE_WGS84_LAT = "http://www.w3.org/2003/01/geo/wgs84_pos#lat";
     public static final String PROPERTY_NAMESPACE_GEONAMES_NAME = "http://www.geonames.org/ontology#name";
     public static final String PROPERTY_NAMESPACE_GEONAMES_LOCATION_MAP = "http://www.geonames.org/ontology#locationMap";
+    //Namespace of the bibo:hasContent Property
     public static final String PROPERTY_NAMESPACE_BIBO_HASCONTENT = "http://purl.org/ontology/bibo/content";
     public static final String PROPERTY_NAMESPACE_DUBLINCORE_ISPARTOF = "http://dublincore.org/2010/10/11/dcterms.rdf#isPartOf";
     

@@ -26,7 +26,7 @@ public class CreateRDF {
         Resource resourcebook = mainresource;
         resourcebook.addProperty(RDF.type, OWL.Thing);
         resourcebook.addProperty(dublinhaspart, model.createResource(chapterfilepath));
-        resourcebook.addProperty(RDF.type,RDFResources.DOCUMENT_CLASS_RESOURCE);
+        resourcebook.addProperty(RDF.type,model.createResource(RDFResources.DOCUMENT_CLASS_RESOURCE));
         return resourcebook;
     }
 
@@ -70,7 +70,7 @@ public class CreateRDF {
         resourcecontent.addProperty(RDFS.label, name);
         resourcecontent.addProperty(RDF.type, OWL.Thing);
         resourcecontent.addProperty(dcisPartof, model.createResource(bookfilepath));
-        resourcecontent.addProperty(RDF.type,RDFResources.DOCUMENTPART_CLASS_RESOURCE);
+        resourcecontent.addProperty(RDF.type,model.createResource(RDFResources.DOCUMENTPART_CLASS_RESOURCE));
 
         return resourcecontent;
     }

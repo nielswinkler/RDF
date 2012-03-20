@@ -34,7 +34,7 @@ public class DataGatherMain {
         Model modelBook = ModelFactory.createDefaultModel();
         
         GatherDBPedia GatherDBPediaObj = new GatherDBPedia();
-        dataListDBPedia_Towns = GatherDBPediaObj.getresulttowns(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
+        dataListDBPedia_Towns = GatherDBPediaObj.getResultTowns(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
                 GatherQuerys.QUERY_ENDPOINT_DBPEDIA, GatherQuerys.QUERY_TOWN_DBPEDIA);
 
         GatherGeoNames GatherGeoNamesObj = new GatherGeoNames();
@@ -44,13 +44,13 @@ public class DataGatherMain {
         //System.out.println(dataListDBPedia_Towns.toString());
 
 
-        dataListDBPedia_People = GatherDBPediaObj.getresultpeople(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
+        dataListDBPedia_People = GatherDBPediaObj.getResultPeople(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
                 GatherQuerys.QUERY_ENDPOINT_DBPEDIA, GatherQuerys.QUERY_PEOPLE_DBPEDIA);
         dataListDBPedia_People = GatherGeoNamesObj.removeMultipleEntries(dataListDBPedia_People);
 
         //System.out.println(dataListDBPedia_People.toString());
 
-        dataListDBPedia_Kings = GatherDBPediaObj.getresultkings(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
+        dataListDBPedia_Kings = GatherDBPediaObj.getResultKings(GatherQuerys.QUERY_ONTOLOGY_SERVICE_DBPEDIA,
                 GatherQuerys.QUERY_ENDPOINT_DBPEDIA, GatherQuerys.QUERY_KINGS_DBPEDIA);
         dataListDBPedia_Kings = GatherGeoNamesObj.removeMultipleEntries(dataListDBPedia_Kings);
 
@@ -65,7 +65,7 @@ public class DataGatherMain {
 
         try {
 
-            for (int b = 1; b < 601; b++) {
+            for (int b = 1; b < 645; b++) {
                 FileReader fread = new FileReader("York_Daten_Chapter" + b + ".txt");
                 BufferedReader in = new BufferedReader(fread);
 
@@ -80,9 +80,9 @@ public class DataGatherMain {
                 String bookfilepath = "https://raw.github.com/nielswinkler/RDF/master/York_Daten.txt";
 
                 Book = modelBook.createResource(bookfilepath);
-                Chapter = modelChapter.createResource(chapterfilepath);
-
                 Book = rdfcreator.CreateRDF.createBookRDF(Book, chapterfilepath);
+                
+                Chapter = modelChapter.createResource(chapterfilepath);
                 Chapter = rdfcreator.CreateRDF.createContent(Chapter, br, "York_Daten_Chapter" + b, bookfilepath);
 
                 if (br.matches("(.*)Roger(.*)") & (br.matches("(.*)archbishop of York(.*)") || br.matches("(.*)archbishop(.*)"))) {
@@ -100,9 +100,13 @@ public class DataGatherMain {
                 for (int i = 0; i < dataListDBPedia_Towns.size(); i++) {
                     String towndbpedia = dataListDBPedia_Towns.get(i).toString();
                     String rdftowndbpedia = dataListDBPedia_Towns.get(i).toString();
-                    towndbpedia = towndbpedia.split("&")[0].replace(" ", "").replace("\n", "");
+                    towndbpedia = towndbpedia.split("&")[0]
+                            .replace(" ", "").replace("\n", "");
+                    rdftowndbpedia = rdftowndbpedia.split("&")[1]
+                            .replace(" ", "").replace("\n", "");
                     if (br.matches("(.*)" + towndbpedia + "(.*)")) {
-                        Chapter = rdfcreator.CreateRDF.createTownDBPedia(Chapter, rdftowndbpedia.split("&")[1].replace(" ", "").replace("\n", ""));
+                        Chapter = rdfcreator.CreateRDF.createTownDBPedia(Chapter, 
+                        rdftowndbpedia);
                     }
                 }
                 for (int i = 0; i < dataListDBPedia_Kings.size(); i++) {
@@ -144,10 +148,8 @@ public class DataGatherMain {
         }
         BufferedWriter out = new BufferedWriter(
                 new OutputStreamWriter(
-                new FileOutputStream("Yorl_Daten_Trippel.txt")));
+                new FileOutputStream("Yorl_Daten_Triple.txt")));
         
-        modelBook.write(System.out, "N-TRIPLE");
-        modelChapter.write(System.out, "N-TRIPLE");
         modelBook.write(out,"N-TRIPLE");
         modelChapter.write(out,"N-TRIPLE");
         out.close();

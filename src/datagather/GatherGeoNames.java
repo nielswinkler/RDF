@@ -33,7 +33,7 @@ public class GatherGeoNames {
      * Style set SHORT FeatureClass set P
      */
 
-    public ToponymSearchCriteria geSearchCriteriaByParameters(SearchCriteriaParameter param) {
+    public ToponymSearchCriteria getSearchCriteriaByParameters(SearchCriteriaParameter param) {
         ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
         searchCriteria.setQ(param.getArea());
         searchCriteria.setStartRow(param.getStartRow());
@@ -52,9 +52,9 @@ public class GatherGeoNames {
     }
 
     public ArrayList<String> getResultGeoNames() {
-
+        // set the UserName
         WebService.setUserName("bachelorwinkler");
-
+        //Adding all searchCriteria into an ArrayList
         ArrayList<SearchCriteriaParameter> parameterList = new ArrayList<SearchCriteriaParameter>();
         parameterList.add(new SearchCriteriaParameter("Yorkshire", 0, "GB", "EU", 800));
         parameterList.add(new SearchCriteriaParameter("Lincolnshire", 0, "GB", "EU", 800));
@@ -76,15 +76,12 @@ public class GatherGeoNames {
         ArrayList<String> geonameslist = new ArrayList<>();
 
         for (SearchCriteriaParameter param : parameterList) {
-            ToponymSearchCriteria criteria = geSearchCriteriaByParameters(param);
+            ToponymSearchCriteria criteria = getSearchCriteriaByParameters(param);
             ToponymSearchResult searchResult = null;
-
             try {
                 searchResult = WebService.search(criteria);
             } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-
+                throw new RuntimeException(ex);}
             for (Toponym toponym : searchResult.getToponyms()) {
                 geonameslist.add(toponym.getName() + "&" + toponym.getGeoNameId() + "&" + toponym.getLongitude() + "&" + toponym.getLatitude());
             }
